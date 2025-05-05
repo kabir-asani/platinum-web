@@ -13,13 +13,13 @@ import { Caption } from "@/components/ui/caption";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import { Spinner } from "@/components/ui/spinner";
 
 export const LogInCard = () => {
   const router = useRouter();
 
   const [logInError, setLogInError] = useState<Error | null>(null);
-
-  const { Field, handleSubmit } = useForm({
+  const { Field, handleSubmit, Subscribe } = useForm({
     defaultValues: {
       email: "",
       password: "",
@@ -128,7 +128,14 @@ export const LogInCard = () => {
             }}
           </Field>
 
-          <Button type="submit">Log In</Button>
+          <Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+            {([canSubmit, isSubmitting]) => (
+              <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                {isSubmitting && <Spinner />}
+                Log In
+              </Button>
+            )}
+          </Subscribe>
         </form>
       </CardContent>
 
