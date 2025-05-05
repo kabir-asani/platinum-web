@@ -14,7 +14,6 @@ import { nameSchema } from "@/lib/extras/schemas/name";
 import { Caption } from "@/components/ui/caption";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { error } from "console";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +22,7 @@ export const SignUpCard = () => {
 
   const [signUpError, setSignUpError] = useState<Error | null>(null);
 
-  const form = useForm({
+  const { Field, handleSubmit } = useForm({
     defaultValues: {
       name: "",
       email: "",
@@ -62,15 +61,15 @@ export const SignUpCard = () => {
           onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            form.handleSubmit();
+            handleSubmit();
           }}
         >
           {/* Name Field */}
-          <form.Field
+          <Field
             name="name"
             validators={{
               onSubmit: (value) => {
-                const { data, error } = nameSchema.safeParse(value.value);
+                const { error } = nameSchema.safeParse(value.value);
 
                 if (error && error.errors.length > 0) {
                   return error.errors[0].message;
@@ -91,18 +90,20 @@ export const SignUpCard = () => {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
-                  {field.state.meta.errors && <Caption variant="error">{field.state.meta.errors.join(" | ")}</Caption>}
+                  {field.state.meta.errors?.length > 0 && (
+                    <Caption variant="error">{field.state.meta.errors.join(" | ")}</Caption>
+                  )}
                 </div>
               );
             }}
-          </form.Field>
+          </Field>
 
           {/* Email Field */}
-          <form.Field
+          <Field
             name="email"
             validators={{
               onSubmit: (value) => {
-                const { data, error } = emailSchema.safeParse(value.value);
+                const { error } = emailSchema.safeParse(value.value);
 
                 if (error && error.errors.length > 0) {
                   return error.errors[0].message;
@@ -123,18 +124,20 @@ export const SignUpCard = () => {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
-                  {field.state.meta.errors && <Caption variant="error">{field.state.meta.errors.join(" | ")}</Caption>}
+                  {field.state.meta.errors?.length > 0 && (
+                    <Caption variant="error">{field.state.meta.errors.join(" | ")}</Caption>
+                  )}
                 </div>
               );
             }}
-          </form.Field>
+          </Field>
 
           {/* Password Field */}
-          <form.Field
+          <Field
             name="password"
             validators={{
               onSubmit: (value) => {
-                const { data, error } = passwordSchema.safeParse(value.value);
+                const { error } = passwordSchema.safeParse(value.value);
 
                 if (error && error.errors.length > 0) {
                   return error.errors[0].message;
@@ -155,13 +158,15 @@ export const SignUpCard = () => {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
-                  {field.state.meta.errors && <Caption variant="error">{field.state.meta.errors.join(" | ")}</Caption>}
+                  {field.state.meta.errors?.length > 0 && (
+                    <Caption variant="error">{field.state.meta.errors.join(" | ")}</Caption>
+                  )}
                 </div>
               );
             }}
-          </form.Field>
+          </Field>
 
-          <form.Field
+          <Field
             name="termsAndConditionsChecked"
             validators={{
               onSubmit: (value) => {
@@ -199,7 +204,7 @@ export const SignUpCard = () => {
                 </div>
               );
             }}
-          </form.Field>
+          </Field>
 
           <Button type="submit">Sign Up</Button>
         </form>
