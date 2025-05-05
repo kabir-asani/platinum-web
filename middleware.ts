@@ -13,5 +13,5 @@ const middleware = (request: NextRequest) => {
 
 export default middleware;
 export const config = {
-  matcher: ["/feed/*path:", "/posts/*path:", "/me/*path:"],
+  matcher: ["/feed/:path*", "/posts/:path*", "/me/:path*"],
 };
