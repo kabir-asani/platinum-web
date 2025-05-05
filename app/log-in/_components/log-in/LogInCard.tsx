@@ -9,36 +9,30 @@ import Link from "next/link";
 import { useForm } from "@tanstack/react-form";
 import { betterAuthClient } from "@/lib/integrations/better-auth";
 import { emailSchema } from "@/lib/extras/schemas/email";
-import { passwordSchema } from "@/lib/extras/schemas/password";
-import { nameSchema } from "@/lib/extras/schemas/name";
 import { Caption } from "@/components/ui/caption";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
+import { z } from "zod";
 
-export const SignUpCard = () => {
+export const LogInCard = () => {
   const router = useRouter();
 
-  const [signUpError, setSignUpError] = useState<Error | null>(null);
+  const [logInError, setLogInError] = useState<Error | null>(null);
 
   const { Field, handleSubmit } = useForm({
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      termsAndConditionsChecked: true,
     },
     onSubmit: async (value) => {
-      const { name, email, password } = value.value;
-      const { error } = await betterAuthClient.signUp.email({
-        name,
+      const { email, password } = value.value;
+      const { error } = await betterAuthClient.signIn.email({
         email,
         password,
       });
 
       if (error) {
-        setSignUpError(new Error("Unable to sign up currently"));
+        setLogInError(new Error("Unable to log in currently!"));
         return;
       }
 
@@ -49,8 +43,8 @@ export const SignUpCard = () => {
   return (
     <Card className="w-md">
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>Enjoy Platinum at its best!</CardDescription>
+        <CardTitle>Welcome back!</CardTitle>
+        <CardDescription>Enjoy Platinum at its best</CardDescription>
       </CardHeader>
 
       <Separator />
@@ -64,40 +58,6 @@ export const SignUpCard = () => {
             handleSubmit();
           }}
         >
-          {/* Name Field */}
-          <Field
-            name="name"
-            validators={{
-              onSubmit: (value) => {
-                const { error } = nameSchema.safeParse(value.value);
-
-                if (error && error.errors.length > 0) {
-                  return error.errors[0].message;
-                }
-              },
-            }}
-          >
-            {(field) => {
-              return (
-                <div className="flex flex-col items-stretch gap-2">
-                  <Label htmlFor={field.name}>Name</Label>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    type="text"
-                    placeholder="Name"
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  {field.state.meta.errors?.length > 0 && (
-                    <Caption variant="error">{field.state.meta.errors.join(" | ")}</Caption>
-                  )}
-                </div>
-              );
-            }}
-          </Field>
-
           {/* Email Field */}
           <Field
             name="email"
@@ -137,7 +97,9 @@ export const SignUpCard = () => {
             name="password"
             validators={{
               onSubmit: (value) => {
-                const { error } = passwordSchema.safeParse(value.value);
+                const logInPasswordSchema = z.string().min(1, "Password cannot be empty");
+
+                const { error } = logInPasswordSchema.safeParse(value.value);
 
                 if (error && error.errors.length > 0) {
                   return error.errors[0].message;
@@ -166,65 +128,25 @@ export const SignUpCard = () => {
             }}
           </Field>
 
-          <Field
-            name="termsAndConditionsChecked"
-            validators={{
-              onSubmit: (value) => {
-                if (!value.value) {
-                  return "You've to agree to our Terms of Service and Privacy Policy";
-                }
-              },
-            }}
-          >
-            {(field) => {
-              return (
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id={field.name}
-                    name={field.name}
-                    checked={field.state.value}
-                    onBlur={field.handleBlur}
-                    onCheckedChange={(e) => {
-                      if (e !== "indeterminate") {
-                        field.handleChange(e);
-                      } else {
-                        field.handleChange(false);
-                      }
-                    }}
-                  />
-                  <label
-                    htmlFor="terms"
-                    className={cn(
-                      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-                      field.state.meta.errors.length > 0 && "text-destructive",
-                    )}
-                  >
-                    Accept terms and conditions
-                  </label>
-                </div>
-              );
-            }}
-          </Field>
-
-          <Button type="submit">Sign Up</Button>
+          <Button type="submit">Log In</Button>
         </form>
       </CardContent>
 
       <Separator />
 
-      {signUpError !== null && (
+      {logInError !== null && (
         <>
           <CardContent>
-            <Caption variant="error">{signUpError.message}</Caption>
+            <Caption variant="error">{logInError.message}</Caption>
           </CardContent>
           <Separator />
         </>
       )}
 
       <CardContent>
-        Already have an account?{" "}
-        <Link href="/log-in" className="underline underline-offset-4">
-          Log in
+        Don&apos;t have an account??{" "}
+        <Link href="/sign-up" className="underline underline-offset-4">
+          Sign Up
         </Link>
       </CardContent>
     </Card>
