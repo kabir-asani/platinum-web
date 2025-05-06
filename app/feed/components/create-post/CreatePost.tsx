@@ -13,8 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { serverUrl } from "@/lib/environment";
+import { tanstackQueryClient } from "@/lib/integrations/tanstack-query";
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import React, { useState } from "react";
 
@@ -40,6 +41,7 @@ export const CreatePost = () => {
     },
     onSuccess: () => {
       setIsOpen(false);
+      tanstackQueryClient.invalidateQueries({ queryKey: ["feed"] });
     },
   });
 
