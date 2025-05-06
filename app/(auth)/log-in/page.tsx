@@ -1,4 +1,4 @@
-import { LogInCard } from "./_components/log-in/LogInCard";
+import { LogInCard } from "./components/log-in/LogInCard";
 
 const LogInPage = () => {
   return (

@@ -151,7 +151,7 @@ export const LogInCard = () => {
       )}
 
       <CardContent>
-        Don&apos;t have an account??{" "}
+        Don&apos;t have an account?{" "}
         <Link href="/sign-up" className="underline underline-offset-4">
           Sign Up
         </Link>
