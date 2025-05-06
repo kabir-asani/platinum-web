@@ -17,7 +17,7 @@ import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-export const NavigationBar = () => {
+export const FeedNavigationBar = () => {
   const router = useRouter();
   const { data } = betterAuthClient.useSession();
   const user = data?.user;

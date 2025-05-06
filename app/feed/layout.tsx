@@ -1,11 +1,16 @@
 import React, { PropsWithChildren } from "react";
-import { NavigationBar } from "./components/navigation-bar/NavigationBar";
+import { FeedNavigationBar } from "./components/navigation-bar/NavigationBar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { FeedSideBar } from "./components/side-bar/FeedSideBar";
 
 const FeedLayout = ({ children }: PropsWithChildren) => {
   return (
     <main>
-      <NavigationBar />
-      {children}
+      <FeedNavigationBar />
+      <SidebarProvider className="w-5xl mx-auto mt-4">
+        <FeedSideBar />
+        {children}
+      </SidebarProvider>
     </main>
   );
 };
