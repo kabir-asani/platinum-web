@@ -7,10 +7,12 @@ const FeedLayout = ({ children }: PropsWithChildren) => {
   return (
     <main>
       <FeedNavigationBar />
-      <SidebarProvider className="w-5xl mx-auto mt-4">
-        <FeedSideBar />
-        {children}
-      </SidebarProvider>
+      <div className="w-5xl mx-auto mt-4 grid grid-cols-5 gap-4">
+        <div className="col-span-1">
+          <FeedSideBar />
+        </div>
+        <div className="col-span-4">{children}</div>
+      </div>
     </main>
   );
 };
